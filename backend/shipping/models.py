@@ -4,6 +4,8 @@ import string
 from django.core.exceptions import ValidationError
 from django.db import models
 
+from .utils import get_location_from_zip_code
+
 
 def validate_truck_number(value):
     if not (1000 <= int(value[:-1]) <= 9999 and value[-1] in string.ascii_uppercase):
@@ -38,6 +40,15 @@ class Truck(models.Model):
         number = random.randint(1000, 9999)
         letter = random.choice(string.ascii_uppercase)
         return f"{number}{letter}"
+    
+
+    def update_location_from_zip_code(self, zip_code):
+        location = get_location_from_zip_code(zip_code)
+        if location:
+            self.current_location = location
+            self.save()
+            return True
+        return False
 
 
 class Cargo(models.Model):
