@@ -44,7 +44,7 @@ class CargoListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cargo
-        fields = ['id', 'pick_up_location', 'delivery_location', 'nearby_trucks']
+        fields = ['id', 'pick_up_location', 'delivery_location', 'weight', 'description', 'nearby_trucks']
 
     def get_pick_up_location(self, obj):
         return obj.pick_up_location.city
@@ -97,9 +97,5 @@ class CargoDetailSerializer(serializers.ModelSerializer):
         return trucks_with_distance
 
 
-class TruckUpdateSerializer(serializers.ModelSerializer):
+class TruckUpdateSerializer(serializers.Serializer):
     zip_code = serializers.CharField(max_length=10)  # Предполагается, что zip_code это строка
-
-    class Meta:
-        model = Truck
-        fields = ['zip_code']

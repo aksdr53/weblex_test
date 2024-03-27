@@ -4,7 +4,7 @@ import string
 from django.core.exceptions import ValidationError
 from django.db import models
 
-from .utils import get_location_from_zip_code
+#from .utils import get_location_from_zip_code
 
 
 def validate_truck_number(value):
@@ -59,3 +59,11 @@ class Cargo(models.Model):
 
     def __str__(self):
         return f"Cargo ID: {self.pk}"
+
+
+def get_location_from_zip_code(zip_code):
+    try:
+        location = Location.objects.get(zip_code=zip_code)
+        return location
+    except Location.DoesNotExist:
+        return None

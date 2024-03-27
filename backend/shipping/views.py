@@ -1,7 +1,11 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.response import Response
-from .models import Cargo
-from .serializers import CargoListSerializer, CargoCreateSerializer, CargoDetailSerializer, TruckSerializer, TruckUpdateSerializer
+from .models import Cargo, Truck
+from .serializers import (CargoListSerializer,
+                          CargoCreateSerializer,
+                          CargoDetailSerializer,
+                          TruckSerializer,
+                          TruckUpdateSerializer)
 
 class CargoViewSet(viewsets.ModelViewSet):
     queryset = Cargo.objects.all()
@@ -30,6 +34,13 @@ class CargoViewSet(viewsets.ModelViewSet):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
 
 
 class TruckViewSet(viewsets.ModelViewSet):
@@ -38,7 +49,7 @@ class TruckViewSet(viewsets.ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
-        serializer = TruckUpdateSerializer(instance, data=request.data)
+        serializer = TruckUpdateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         zip_code = serializer.validated_data['zip_code']
 
