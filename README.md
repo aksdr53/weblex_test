@@ -29,4 +29,3 @@ sudo apt-get install docker-compose-plugin              - последняя в�
 **_Создать и запустить контейнеры Docker**_
 ```
 sudo docker compose up -d
-```
