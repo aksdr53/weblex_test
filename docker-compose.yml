@@ -1,0 +1,32 @@
+version: '3.3'
+
+volumes:
+  pg_data:
+  static:
+  media:
+
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: ship_db
+      POSTGRES_USER: ship_user
+      POSTGRES_PASSWORD: ship_password
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+  backend:
+    build: ./backend/
+    command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py load_data && gunicorn --bind 0.0.0.0:8000 backend.wsgi:application"
+    depends_on: 
+      - db
+    volumes:
+      - static:/collected_static
+      - media:/app/media
+  gateway:
+    build: ./gateway/
+    volumes:
+      - static:/staticfiles/
+    depends_on: 
+      - backend
+    ports:
+      - 8000:80 

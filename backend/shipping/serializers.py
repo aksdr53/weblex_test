@@ -13,8 +13,8 @@ class TruckSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class CargoCreateSerializer(serializers.ModelSerializer):
-    pick_up_zip = serializers.CharField(max_length=10)
-    delivery_zip = serializers.CharField(max_length=10)
+    pick_up_zip = serializers.CharField(max_length=10, write_only=True)
+    delivery_zip = serializers.CharField(max_length=10, write_only=True)
 
     class Meta:
         model = Cargo
@@ -44,7 +44,7 @@ class CargoListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cargo
-        fields = ['id', 'pick_up_location', 'delivery_location', 'weight', 'description', 'nearby_trucks']
+        fields = ['id', 'pick_up_location', 'delivery_location', 'weight', 'description', 'nearby_trucks_count']
 
     def get_pick_up_location(self, obj):
         return obj.pick_up_location.city
@@ -52,7 +52,7 @@ class CargoListSerializer(serializers.ModelSerializer):
     def get_delivery_location(self, obj):
         return obj.delivery_location.city
 
-    def get_nearby_trucks(self, obj):
+    def get_nearby_trucks_count(self, obj):
         cargo_pickup_location = (obj.pick_up_location.latitude, obj.pick_up_location.longitude)
         nearby_trucks = []
         for truck in Truck.objects.all():
@@ -66,7 +66,7 @@ class CargoListSerializer(serializers.ModelSerializer):
                         'longitude': truck.current_location.longitude
                     }
                 })
-        return nearby_trucks
+        return len(nearby_trucks)
 
 
 class CargoDetailSerializer(serializers.ModelSerializer):
@@ -95,6 +95,13 @@ class CargoDetailSerializer(serializers.ModelSerializer):
                 'distance': distance
             })
         return trucks_with_distance
+
+
+class CargoUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Cargo
+        fields = ['weight', 'description']
 
 
 class TruckUpdateSerializer(serializers.Serializer):

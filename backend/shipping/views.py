@@ -4,6 +4,7 @@ from .models import Cargo, Truck
 from .serializers import (CargoListSerializer,
                           CargoCreateSerializer,
                           CargoDetailSerializer,
+                          CargoUpdateSerializer,
                           TruckSerializer,
                           TruckUpdateSerializer)
 
@@ -16,6 +17,8 @@ class CargoViewSet(viewsets.ModelViewSet):
             return CargoDetailSerializer
         elif self.action == 'create':
             return CargoCreateSerializer
+        elif self.action == 'update':
+            return CargoUpdateSerializer
         return super().get_serializer_class()
 
     def list(self, request, *args, **kwargs):
