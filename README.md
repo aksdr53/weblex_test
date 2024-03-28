@@ -17,7 +17,6 @@
 git@github.com:aksdr53/weblex_test.git
 ```
 
-```
 
 *_Установить Docker, Docker Compose:_**
 ```
@@ -26,6 +25,9 @@ curl -fsSL https://get.docker.com -o get-docker.sh      - скачать скр�
 sh get-docker.sh                                        - запуск скрипта
 sudo apt-get install docker-compose-plugin              - последняя версия docker compose
 ```
+
 **_Создать и запустить контейнеры Docker**_
+
 ```
 sudo docker compose up -d
+```
